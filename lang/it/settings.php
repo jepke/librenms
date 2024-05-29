@@ -65,7 +65,6 @@ return [
             'rrdtool' => ['name' => 'Datastore: RRDTool'],
             'snmp' => ['name' => 'SNMP'],
             'poller_modules' => ['name' => 'Poller Modules'],
-            'interface_types' => ['name' => 'Interface Type by RFC 7224'],
         ],
         'system' => [
             'cleanup' => ['name' => 'Cleanup'],
@@ -236,9 +235,6 @@ return [
                     'help' => 'Matches the request origin. Wildcards can be used, eg. *.mydomain.com',
                 ],
             ],
-        ],
-        'api_demo' => [
-            'description' => 'This is the demo',
         ],
         'apps' => [
             'powerdns-recursor' => [
@@ -464,10 +460,6 @@ return [
         'base_url' => [
             'description' => 'Specific URL',
             'help' => 'This should *only* be set if you want to *force* a particular hostname/port. It will prevent the web interface being usable form any other hostname',
-        ],
-        'device_perf_purge' => [
-            'description' => 'Device performance entries older than',
-            'help' => 'Cleanup done by daily.sh',
         ],
         'discovery_modules' => [
             'arp-table' => [
@@ -1179,6 +1171,10 @@ return [
         ],
         'ports_fdb_purge' => [
             'description' => 'Port FDB entries older than',
+            'help' => 'Cleanup done by daily.sh',
+        ],
+        'ports_nac_purge' => [
+            'description' => 'Port NAC entries older than',
             'help' => 'Cleanup done by daily.sh',
         ],
         'ports_purge' => [

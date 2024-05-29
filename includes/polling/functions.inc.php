@@ -135,36 +135,36 @@ function poll_sensor($device, $class)
 function record_sensor_data($device, $all_sensors)
 {
     $supported_sensors = [
-        'airflow'        => 'cfm',
-        'ber'            => '',
-        'bitrate'        => 'bps',
-        'charge'         => '%',
+        'airflow' => 'cfm',
+        'ber' => '',
+        'bitrate' => 'bps',
+        'charge' => '%',
         'chromatic_dispersion' => 'ps/nm',
-        'cooling'        => 'W',
-        'count'          => '',
-        'current'        => 'A',
-        'delay'          => 's',
-        'dbm'            => 'dBm',
-        'eer'            => 'eer',
-        'fanspeed'       => 'rpm',
-        'frequency'      => 'Hz',
-        'humidity'       => '%',
-        'load'           => '%',
-        'loss'           => '%',
-        'percent'        => '%',
-        'power'          => 'W',
+        'cooling' => 'W',
+        'count' => '',
+        'current' => 'A',
+        'delay' => 's',
+        'dbm' => 'dBm',
+        'eer' => 'eer',
+        'fanspeed' => 'rpm',
+        'frequency' => 'Hz',
+        'humidity' => '%',
+        'load' => '%',
+        'loss' => '%',
+        'percent' => '%',
+        'power' => 'W',
         'power_consumed' => 'kWh',
-        'power_factor'   => '',
-        'pressure'       => 'kPa',
+        'power_factor' => '',
+        'pressure' => 'kPa',
         'quality_factor' => 'dB',
-        'runtime'        => 'Min',
-        'signal'         => 'dBm',
-        'snr'            => 'SNR',
-        'state'          => '#',
-        'temperature'    => 'C',
-        'tv_signal'      => 'dBmV',
-        'voltage'        => 'V',
-        'waterflow'      => 'l/m',
+        'runtime' => 'Min',
+        'signal' => 'dBm',
+        'snr' => 'SNR',
+        'state' => '#',
+        'temperature' => 'C',
+        'tv_signal' => 'dBmV',
+        'voltage' => 'V',
+        'waterflow' => 'l/m',
     ];
 
     foreach ($all_sensors as $sensor) {
@@ -470,10 +470,15 @@ function json_app_get($device, $extend, $min_version = 1)
         if (Debug::isVerbose()) {
             echo 'Decoded Base64+GZip Output: ' . $output . "\n\n";
         }
+    } else {
+        $output = stripslashes($output);
+        if (Debug::isVerbose()) {
+            echo 'Output post stripslashes: ' . $output . "\n\n";
+        }
     }
 
     //  turn the JSON into a array
-    $parsed_json = json_decode(stripslashes($output), true);
+    $parsed_json = json_decode($output, true);
 
     // improper JSON or something else was returned. Populate the variable with an error.
     if (json_last_error() !== JSON_ERROR_NONE) {

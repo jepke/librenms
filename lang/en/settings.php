@@ -40,6 +40,7 @@ return [
             'general' => ['name' => 'General Discovery Settings'],
             'route' => ['name' => 'Routes Discovery Module'],
             'discovery_modules' => ['name' => 'Discovery Modules'],
+            'ports' => ['name' => 'Ports Module'],
             'storage' => ['name' => 'Storage Module'],
             'networks' => ['name' => 'Networks'],
         ],
@@ -60,13 +61,13 @@ return [
             'distributed' => ['name' => 'Distributed Poller'],
             'graphite' => ['name' => 'Datastore: Graphite'],
             'influxdb' => ['name' => 'Datastore: InfluxDB'],
+            'influxdbv2' => ['name' => 'Datastore: InfluxDBv2'],
             'opentsdb' => ['name' => 'Datastore: OpenTSDB'],
             'ping' => ['name' => 'Ping'],
             'prometheus' => ['name' => 'Datastore: Prometheus'],
             'rrdtool' => ['name' => 'Datastore: RRDTool'],
             'snmp' => ['name' => 'SNMP'],
             'poller_modules' => ['name' => 'Poller Modules'],
-            'interface_types' => ['name' => 'Interface Type by RFC 7224'],
         ],
         'system' => [
             'cleanup' => ['name' => 'Cleanup'],
@@ -98,6 +99,10 @@ return [
             'help' => 'If a host is added as an ip address it is checked to ensure the ip is not already present. If the ip is present the host is not added. If host is added by hostname this check is not performed. If the setting is true hostnames are resolved and the check is also performed. This helps prevents accidental duplicate hosts.',
         ],
         'alert_rule' => [
+            'acknowledged_alerts' => [
+                'description' => 'Acknowledged Alerts',
+                'help' => 'Send alerts when an alert is acknowledged',
+            ],
             'severity' => [
                 'description' => 'Severity',
                 'help' => 'Severity for an Alert',
@@ -126,6 +131,10 @@ return [
                 'description' => 'Recovery Alerts',
                 'help' => 'Notify if Alert recovers',
             ],
+            'acknowledgement_alerts' => [
+                'description' => 'Acknowledgement Alerts',
+                'help' => 'Notify if Alert is acknowledged',
+            ],
             'invert_map' => [
                 'description' => 'All devices except in list',
                 'help' => 'Alert only for Devices which are not listed',
@@ -137,44 +146,44 @@ return [
                 'help' => 'Default acknowledge until alert clears',
             ],
             'admins' => [
-                'description' => 'Issue alerts to admins',
-                'help' => 'Alert administrators',
+                'description' => 'Issue alerts to admins (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
             'default_copy' => [
-                'description' => 'Copy all email alerts to default contact',
-                'help' => 'Copy all email alerts to default contact',
+                'description' => 'Copy all email alerts to default contact (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
             'default_if_none' => [
-                'description' => 'cannot set in webui?',
-                'help' => 'Send mail to default contact if no other contacts are found',
+                'description' => 'cannot set in webui? (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
             'default_mail' => [
-                'description' => 'Default contact',
-                'help' => 'The default mail contact',
+                'description' => 'Default contact (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
             'default_only' => [
-                'description' => 'Send alerts to default contact only',
-                'help' => 'Only alert default mail contact',
+                'description' => 'Send alerts to default contact only (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
             'disable' => [
                 'description' => 'Disable alerting',
                 'help' => 'Stop alerts being generated',
             ],
             'acknowledged' => [
-                'description' => 'Send Acknowledged Alerts',
+                'description' => 'Send acknowledged alerts',
                 'help' => 'Notify if Alert has been acknowledged',
             ],
             'fixed-contacts' => [
-                'description' => 'Updates to contact email addresses not honored',
+                'description' => 'Disable contact changes for active alerts',
                 'help' => 'If TRUE any changes to sysContact or users emails will not be honoured whilst alert is active',
             ],
             'globals' => [
-                'description' => 'Issue alerts to read only users',
-                'help' => 'Alert read only administrators',
+                'description' => 'Issue alerts to read only users (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
             'syscontact' => [
-                'description' => 'Issue alerts to sysContact',
-                'help' => 'Send alert to email in SNMP sysContact',
+                'description' => 'Issue alerts to sysContact (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
             'transports' => [
                 'mail' => [
@@ -187,8 +196,8 @@ return [
                 'help' => 'Tolerance window in seconds',
             ],
             'users' => [
-                'description' => 'Issue alerts to normal users',
-                'help' => 'Alert normal users',
+                'description' => 'Issue alerts to normal users (deprecated)',
+                'help' => 'Deprecated, use the mail alert transport instead.',
             ],
         ],
         'alert_log_purge' => [
@@ -243,9 +252,6 @@ return [
                 ],
             ],
         ],
-        'api_demo' => [
-            'description' => 'This is the demo',
-        ],
         'apps' => [
             'powerdns-recursor' => [
                 'api-key' => [
@@ -280,6 +286,10 @@ return [
                 ],
                 'configs' => [
                     'description' => 'Provider configs',
+                ],
+                'scopes' => [
+                    'description' => 'Scopes that should be included with in the authentication request',
+                    'help' => 'See https://laravel.com/docs/10.x/socialite#access-scopes',
                 ],
             ],
         ],
@@ -439,7 +449,7 @@ return [
         ],
         'auth_ldap_userdn' => [
             'description' => 'Use full user DN',
-            'help' => "Uses a user's full DN as the value of the member attribute in a group instead of member: username using the prefix and suffix. (it’s member: uid=username,ou=groups,dc=domain,dc=com)",
+            'help' => "Uses a user's full DN as the value of the member attribute in a group instead of member: username using the prefix and suffix. (it's member: uid=username,ou=groups,dc=domain,dc=com)",
         ],
         'auth_ldap_wildcard_ou' => [
             'description' => 'Wildcard user OU',
@@ -494,10 +504,6 @@ return [
         'base_url' => [
             'description' => 'Specific URL',
             'help' => 'This should *only* be set if you want to *force* a particular hostname/port. It will prevent the web interface being usable form any other hostname',
-        ],
-        'device_perf_purge' => [
-            'description' => 'Device performance entries older than',
-            'help' => 'Cleanup done by daily.sh',
         ],
         'discovery_modules' => [
             'arp-table' => [
@@ -757,6 +763,10 @@ return [
                 'description' => 'Attempt to Geocode Locations',
                 'help' => 'Try to lookup latitude and longitude via geocoding API during polling',
             ],
+            'layer' => [
+                'description' => 'Initial Map Layer',
+                'help' => 'Initial map layer to display when showing various Geo Maps',
+            ],
         ],
         'graphite' => [
             'enable' => [
@@ -925,6 +935,45 @@ return [
                 'help' => 'Verify the SSL certificate is valid and trusted',
             ],
         ],
+        'influxdbv2' => [
+            'bucket' => [
+                'description' => 'Bucket',
+                'help' => 'Name of the InfluxDB Bucket to store metrics',
+            ],
+            'enable' => [
+                'description' => 'Enable',
+                'help' => 'Exports metrics to InfluxDB using the InfluxDBv2 API',
+            ],
+            'host' => [
+                'description' => 'Server',
+                'help' => 'The IP or hostname of the InfluxDB server to send data to',
+            ],
+            'token' => [
+                'description' => 'Token',
+                'help' => 'Token to connect to InfluxDB, if required',
+            ],
+            'port' => [
+                'description' => 'Port',
+                'help' => 'The port to use to connect to the InfluxDB server',
+            ],
+            'transport' => [
+                'description' => 'Transport',
+                'help' => 'The port to use to connect to the InfluxDB server',
+                'options' => [
+                    'http' => 'HTTP',
+                    'https' => 'HTTPS',
+                ],
+            ],
+            'organization' => [
+                'description' => 'Organization',
+                'help' => 'The organization that contains the bucket on the InfluxDB server',
+            ],
+            'allow_redirects' => [
+                'description' => 'Allow Redirects',
+                'help' => 'To allow redirect from the InfluxDB server',
+            ],
+
+        ],
         'ipmitool' => [
             'description' => 'Path to ipmtool',
         ],
@@ -988,6 +1037,10 @@ return [
         ],
         'nfsen_lasts' => [
             'description' => 'Default Last Options',
+        ],
+        'nfsen_base' => [
+            'description' => 'NFSen Base Directory',
+            'help' => 'Used to locate device specific graphs',
         ],
         'nfsen_split_char' => [
             'description' => 'Split Char',
@@ -1081,9 +1134,21 @@ return [
                 ],
             ],
         ],
+        'bad_if' => [
+            'description' => 'Bad Interface Names',
+            'help' => 'Network interface IF-MIB:!:ifName which should be ignored',
+        ],
+        'bad_if_regexp' => [
+            'description' => 'Bad Interface Name Regex',
+            'help' => 'Network interface IF-MIB:!:ifName which should be ignored using regular expressions',
+        ],
+        'bad_ifoperstatus' => [
+            'description' => 'Bad Interface Operating Status',
+            'help' => 'Network interface IF-MIB:!:ifOperStatus which should be ignored',
+        ],
         'bad_iftype' => [
-            'description' => 'Bad Interfaces',
-            'help' => 'Network Interface Types which should be ignored',
+            'description' => 'Bad Interface Types',
+            'help' => 'Network interface IF-MIB:!:ifType which should be ignored',
         ],
         'ping' => [
             'description' => 'Path to ping',
@@ -1237,6 +1302,10 @@ return [
         ],
         'ports_fdb_purge' => [
             'description' => 'Port FDB entries older than',
+            'help' => 'Cleanup done by daily.sh',
+        ],
+        'ports_nac_purge' => [
+            'description' => 'Port NAC entries older than',
             'help' => 'Cleanup done by daily.sh',
         ],
         'ports_purge' => [
