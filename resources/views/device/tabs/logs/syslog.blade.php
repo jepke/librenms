@@ -20,10 +20,7 @@
                     </thead>
                 </table>
             </div>
-
-            @if(! $filter_device)
-                <input type="hidden" name="device" id="device" value="{{ $device->device_id }}">
-            @endif
+            <input type="hidden" name="device" id="device" value="{{ $device->device_id }}">
         </x-panel>
     </x-device.page>
 @endsection
@@ -61,18 +58,22 @@
             '</div>' +
             '&nbsp;&nbsp;<div class="form-group">' +
             '<select name="program" id="program" class="form-control">' +
-                '<option value="">All Programs&nbsp;&nbsp;</option>' +
-            @if($program)
-                '<option value=\"' + @json($program) + '\">' + @json($program) + '</option>' +";
-            @endif
+                '<option value="">All Programs</option>' +
+                @if ($program)
+                    '<option value="' + @json($program) + '" selected>' +
+                        @json($program) +
+                    '</option>' +
+                @endif
             '</select>' +
             '</div>' +
             '&nbsp;&nbsp;<div class="form-group">' +
             '<select name="priority" id="priority" class="form-control">' +
                 '<option value="">All Priorities</option>' +
-            @if($priority)
-                '<option value=\"' + @json($priority) + '\">' + @json($priority) + '</option>' +";
-            @endif
+                @if ($priority)
+                    '<option value="' + @json($priority) + '" selected>' +
+                        @json($priority) +
+                    '</option>' +
+                @endif
             '</select>' +
             '</div>' +
             '&nbsp;&nbsp;<div class="form-group">' +
