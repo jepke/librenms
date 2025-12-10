@@ -59,10 +59,6 @@
                 term: params.term,
                 page: params.page || 1
             }
-<<<<<<< HEAD
         }, @json($eventtype), 'All Types');
-=======
-        }, @json($eventtype ? ['id' => $eventtype, 'text' => $eventtype] : null),'All types');
->>>>>>> 15c13e9fa (Revisit the issue with keep init_select2() approach)
     </script>
 @endsection

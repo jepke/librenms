@@ -113,10 +113,6 @@
             $("#dtpickerto").data("DateTimePicker").maxDate('{{ $now }}');
         }
 
-<<<<<<< HEAD
-        init_select2("select#device", "device", {limit: 100}, "{{ $device->device_id }}", 'All Devices');
-=======
->>>>>>> 15c13e9fa (Revisit the issue with keep init_select2() approach)
         init_select2("#program", "syslog", function(params) {
             return {
                 field: "program",
@@ -124,11 +120,7 @@
                 term: params.term,
                 page: params.page || 1
             }
-<<<<<<< HEAD
         }, @json($program), 'All Programs');
-=======
-        }, @json($program ? ['id' => $program, 'text' => $program] : null),'All Programs');
->>>>>>> 15c13e9fa (Revisit the issue with keep init_select2() approach)
         init_select2("#priority", "syslog", function(params) {
             return {
                 field: "priority",
@@ -136,10 +128,6 @@
                 term: params.term,
                 page: params.page || 1
             }
-<<<<<<< HEAD
         }, @json($priority), 'All Priorities');
-=======
-        }, @json($priority ? ['id' => $priority, 'text' => $priority] : null),'All Priorities');
->>>>>>> 15c13e9fa (Revisit the issue with keep init_select2() approach)
     </script>
 @endsection
