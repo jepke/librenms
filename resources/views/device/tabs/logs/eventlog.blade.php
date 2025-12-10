@@ -39,47 +39,30 @@
 
         $('.actionBar').append(
             '<div class="pull-left">' +
-            '<form method="GET" action="" class="form-inline" role="form" id="result_form">' +
-
-            @if($filter_device)
+                '<form method="GET" action="" class="form-inline" role="form" id="result_form">' +
                 '<div class="form-group">' +
-                '<label><strong>Device&nbsp;&nbsp;</strong></label>' +
-                '<select name="device" id="device" class="form-control">' +
-                '<option value="">All Devices</option>' +
-                '<option value=$device->device_id>" . $device->displayName() . "</option>' +
-                '</select>' +
-                '</div>&nbsp;&nbsp;&nbsp;&nbsp;' +
-            @endif
-
-            '<div class="form-group"><label><strong>Type&nbsp;&nbsp;</strong></label>' +
-            '<select name="eventtype" id="eventtype" class="form-control input-sm">' +
-                '<option value="">All types</option>' +
-                '<option value=\"' + @json($eventtype) + '\">' + @json($eventtype) + '</option>' +
-            '</select>' +
-            '</div>&nbsp;&nbsp;' +
-            '<button type="submit" class="btn btn-default">Filter</button>' +
-            '</form>' +
+                    '<label><strong>Type&nbsp;&nbsp;</strong></label>' +
+                    '<select name="eventtype" id="eventtype" class="form-control">' +
+                        '<option value="">All types</option>' +
+                    '</select>' +
+                '</div>' +
+                '&nbsp;&nbsp;' +
+                '<button type="submit" class="btn btn-default">Filter</button>' +
+                '</form>' +
             '</div>'
         );
 
-        $('#eventtype').select2({
-            theme: 'bootstrap',
-            dropdownAutoWidth: true,
-            width: 'auto',
-            allowClear: true,
-            placeholder: 'All Types',
-            ajax: {
-                url: '{{ route('ajax.select.eventlog') }}',
-                delay: 200,
-                data: function (params) {
-                    return {
-                        field: 'type',
-                        device: $('#device').val(),
-                        term: params.term,
-                        page: params.page || 1
-                    };
-                }
+        init_select2("#eventtype", "eventlog", function(params) {
+            return {
+                field: "type",
+                device: $('#device').val(),
+                term: params.term,
+                page: params.page || 1
             }
+<<<<<<< HEAD
         }, @json($eventtype), 'All Types');
+=======
+        }, @json($eventtype ? ['id' => $eventtype, 'text' => $eventtype] : null),'All types');
+>>>>>>> 15c13e9fa (Revisit the issue with keep init_select2() approach)
     </script>
 @endsection
