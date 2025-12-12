@@ -55,6 +55,8 @@
                 '</div>' +
                 '&nbsp;&nbsp;' +
                 '<div class="form-group">' +
+                    '<label for="dtpickerfrom">Time range</label>' +
+                    '&nbsp;&nbsp;' +
                     '<input name="from" type="text" class="form-control" id="dtpickerfrom" maxlength="16" value="' + @json($from) + '" placeholder="From" data-date-format="YYYY-MM-DD HH:mm">' +
                 '</div>' +
                 '&nbsp;&nbsp;' +

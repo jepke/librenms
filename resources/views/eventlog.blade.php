@@ -1,10 +1,13 @@
 @extends('layouts.librenmsv1')
 
-@section('content')
-    <x-device.page :device="$device" subtitle="{{ __('Eventlog') }}">
-        <x-device.log-tabs :device="$device" tab="eventlog" />
+@section('title', __('Eventlog'))
 
-        <x-panel title="{{ __('Eventlog') }}">
+@section('content')
+    <div class="container-fluid">
+        <x-panel body-class="tw:p-0!">
+            <x-slot name="heading">
+                <h3 class="panel-title">@lang('Eventlog')</h3>
+            </x-slot>
             <div class="table-responsive">
                 <table id="eventlog" class="table table-hover table-condensed table-striped"
                     data-url="{{ route('table.eventlog') }}" data-export="false">
@@ -12,6 +15,7 @@
                     <tr>
                         <th data-column-id="label" data-width="20" data-sortable="false"></th>
                         <th data-column-id="datetime" data-width="160" data-order="desc">@lang('Timestamp')</th>
+                        <th data-column-id="device_id" data-order="asc">@lang('Device')</th>
                         <th data-column-id="type">@lang('Type')</th>
                         <th data-column-id="message">@lang('Message')</th>
                         <th data-column-id="username">@lang('User')</th>
@@ -20,7 +24,7 @@
                 </table>
             </div>
         </x-panel>
-    </x-device.page>
+    </div>
 @endsection
 
 @push('scripts')
@@ -32,14 +36,18 @@
                 templates: {
                     header: '<div id="@{{ctx.id}}" class="@{{css.header}} tw:flex tw:flex-wrap tw:items-center">' +
                         '<form class="tw:flex tw:flex-wrap tw:items-center" role="form" id="eventlog_filter">' +
+                            '{!! addslashes(csrf_field()) !!}' +
+                            '<div class="tw:flex tw:items-baseline tw:ml-2">' +
+                                '<select name="device" id="device" class="form-control"></select>' +
+                            '</div>' +
                             '<div class="tw:flex tw:items-baseline tw:ml-2">' +
                                 '<select name="eventtype" id="eventtype" class="form-control"></select>' +
                             '</div>' +
                             '<div class="tw:flex tw:relative tw:items-baseline tw:ml-2">' +
-                                '<input name="from" type="text" class="form-control" id="dtpickerfrom" maxlength="16" value="' + @json($from) + '" placeholder="From" data-date-format="YYYY-MM-DD HH:mm">' +
+                                '<input name="from" type="text" class="form-control" id="dtpickerfrom" maxlength="16" value="' + @json($filter['from']) + '" placeholder="From" data-date-format="YYYY-MM-DD HH:mm">' +
                             '</div>' +
                             '<div class="tw:flex tw:relative tw:items-baseline tw:ml-2">' +
-                                '<input name="to" type="text" class="form-control" id="dtpickerto" maxlength="16" value="' + @json($to) + '" placeholder="To" data-date-format="YYYY-MM-DD HH:mm">' +
+                                '<input name="to" type="text" class="form-control" id="dtpickerto" maxlength="16" value="' + @json($filter['to']) + '" placeholder="To" data-date-format="YYYY-MM-DD HH:mm">' +
                             '</div>' +
                             '<button type="submit" class="btn btn-default tw:ml-2">@lang("Filter")</button>' +
                             '<button type="button" class="btn btn-default tw:ml-2" id="eventlog_clear">@lang("Clear")</button>' +
@@ -52,7 +60,7 @@
                 },
                 post: function () {
                     return {
-                        device: {{ $device->device_id }},
+                        device: $('#device').val() || '',
                         eventtype: $('#eventtype').val() || '',
                         from: $('#dtpickerfrom').val() || '',
                         to: $('#dtpickerto').val() || '',
@@ -74,7 +82,7 @@
             $("#eventlog").on("loaded.rs.jquery.bootgrid", function () {
                 $("#dtpickerfrom").datetimepicker({
                     icons: dtIcons,
-                    defaultDate: '{{ $default_date }}'
+                    defaultDate: '{{ $filter['default_date'] }}'
                 });
                 $("#dtpickerfrom").on("dp.change", function (e) {
                     $("#dtpickerto").data("DateTimePicker").minDate(e.date);
@@ -85,28 +93,29 @@
                 $("#dtpickerto").on("dp.change", function (e) {
                     $("#dtpickerfrom").data("DateTimePicker").maxDate(e.date);
                 });
-                if ($("#dtpickerfrom").val() != "") {
+                if ($("#dtpickerfrom").val() !== '') {
                     $("#dtpickerto").data("DateTimePicker").minDate($("#dtpickerfrom").val());
                 }
-                if ($("#dtpickerto").val() != "") {
+                if ($("#dtpickerto").val() !== '') {
                     $("#dtpickerfrom").data("DateTimePicker").maxDate($("#dtpickerto").val());
                 } else {
-                    $("#dtpickerto").data("DateTimePicker").maxDate('{{ $now }}');
+                    $("#dtpickerto").data("DateTimePicker").maxDate('{{ $filter['now'] }}');
                 }
                 $("#eventlog_filter").on("submit", function (e) {
                     e.preventDefault();
                     eventlog_grid.bootgrid("reload", true);
                 });
-
-                init_select2("#eventtype", "eventlog", @json($eventlog_filter), @json($eventtype), "@lang('All Types')");
+                init_select2("#device", "device", {limit: 100}, @json($device) , "@lang('All Devices')");
+                init_select2("#eventtype", "eventlog", @json($eventlog_filter), @json($filter['eventtype']), "@lang('All Types')");
                 $("#eventlog_clear").on("click", function () {
+                    $("#device").val(null).trigger("change");
                     $("#eventtype").val(null).trigger("change");
 
                     const fromPicker = $("#dtpickerfrom").data("DateTimePicker");
                     const toPicker   = $("#dtpickerto").data("DateTimePicker");
 
                     const now   = moment();
-                    const from  = moment(now).subtract(7, 'day');
+                    const from  = moment(now).subtract(1, 'day');
 
                     fromPicker.minDate(false);
                     fromPicker.maxDate(now);
