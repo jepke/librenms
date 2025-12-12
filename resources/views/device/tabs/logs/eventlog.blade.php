@@ -102,6 +102,9 @@
                 $("#eventlog_clear").on("click", function () {
                     $("#eventtype").val(null).trigger("change");
 
+                    $("#eventlog").find(".search-field").val("");
+                    eventlog_grid.bootgrid("search", "");
+
                     const fromPicker = $("#dtpickerfrom").data("DateTimePicker");
                     const toPicker   = $("#dtpickerto").data("DateTimePicker");
 
