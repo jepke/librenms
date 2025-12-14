@@ -31,7 +31,11 @@
 @push('scripts')
     <script>
         $(function () {
+<<<<<<< HEAD
             const syslog_grid = $("#syslog").bootgrid({
+=======
+            var syslog_grid = $("#syslog").bootgrid({
+>>>>>>> 7fd69710a4e2b1683822b02661311ebe070d7790
                 ajax: true,
                 rowCount: [25, 50, 100, 250, -1],
                 templates: {

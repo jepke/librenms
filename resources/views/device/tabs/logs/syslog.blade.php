@@ -27,7 +27,11 @@
 @push('scripts')
     <script>
         $(function () {
+<<<<<<< HEAD
             const syslog_grid = $("#syslog").bootgrid({
+=======
+            var syslog_grid = $("#syslog").bootgrid({
+>>>>>>> 7fd69710a4e2b1683822b02661311ebe070d7790
                 ajax: true,
                 rowCount: [20, 50, 100, 250, -1],
                 templates: {
@@ -105,6 +109,7 @@
                 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         init_select2("#program", "syslog", function(params) {
             return {
                 field: "program",
@@ -122,6 +127,8 @@
             }
         }, @json($priority), 'All Priorities');
 =======
+=======
+>>>>>>> 7fd69710a4e2b1683822b02661311ebe070d7790
                 init_select2("#program", "syslog", @json($syslog_program_filter), @json($program), "@lang('All Programs')");
                 init_select2("#priority", "syslog", @json($syslog_priority_filter), @json($priority), "@lang('All Priorities')");
                 $("#syslog_clear").on("click", function () {
@@ -149,7 +156,10 @@
                 });
             });
         });
+<<<<<<< HEAD
 >>>>>>> 7fd69710a (Syslog pages)
+=======
+>>>>>>> 7fd69710a4e2b1683822b02661311ebe070d7790
     </script>
 @endpush
 
