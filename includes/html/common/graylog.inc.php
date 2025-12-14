@@ -50,7 +50,7 @@ searchbar = "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\">
 ';
 
 $tmp_output .= '"<div class=\"form-group\"><select name=\"stream\" id=\"stream\" class=\"form-control\" data-placeholder=\"All Messages\">"+';
-if ($vars['stream']) {
+if (! empty($vars['stream'])) {
     $tmp_output .= '"<option value=\"' . \LibreNMS\Util\Clean::html($vars['stream'], []) . '\">' . \LibreNMS\Util\Clean::html($vars['stream'], []) . '</option>" +';
     $filter_device = $device->device_id;
 }
@@ -65,7 +65,7 @@ if (! empty($filter_device)) {
             "<div class=\"form-group\"><select name=\"device\" id=\"device\" class=\"form-control\" data-placeholder=\"All Devices\">"+
 
 ';
-    if ($vars['device'] && $device = Device::find($vars['device'])) {
+    if (! empty($vars['device']) && $device = Device::find($vars['device'])) {
         $tmp_output .= '"<option value=\"' . $device->device_id . '\">' . $device->displayName() . '</option>" +';
         $filter_device = $device->device_id;
     }
@@ -109,7 +109,7 @@ $tmp_output .= '
                 "<option value=\"1209600\">Search last 14 days</option>"+
                 "<option value=\"2592000\">Search last 30 days</option>"+
                 "</select>&nbsp;</div>"+
-                "<button type=\"submit\" class=\"btn btn-success\">Filter</button>&nbsp;"+
+                "<button type=\"submit\" class=\"btn btn-default\">Filter</button>&nbsp;"+
                 "</form></div>"+
                 "<div class=\"col-sm-4 actionBar\"><p class=\"{{css.search}}\"></p><p class=\"{{css.actions}}\"></p></div></div></div>";
 
@@ -123,7 +123,7 @@ $tmp_output .= '
         },
 ';
 
-if (! isset($no_form) && $no_form !== true) {
+if (empty($no_form)) {
     $tmp_output .= '
         templates: {
             header: searchbar
