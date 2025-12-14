@@ -104,27 +104,6 @@
                     syslog_grid.bootgrid("reload", true);
                 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        init_select2("#program", "syslog", function(params) {
-            return {
-                field: "program",
-                device: {{ $device->device_id }},
-                term: params.term,
-                page: params.page || 1
-            }
-        }, @json($program), 'All Programs');
-        init_select2("#priority", "syslog", function(params) {
-            return {
-                field: "priority",
-                device: {{ $device->device_id }},
-                term: params.term,
-                page: params.page || 1
-            }
-        }, @json($priority), 'All Priorities');
-=======
-=======
->>>>>>> 7fd69710a4e2b1683822b02661311ebe070d7790
                 init_select2("#program", "syslog", @json($syslog_program_filter), @json($program), "@lang('All Programs')");
                 init_select2("#priority", "syslog", @json($syslog_priority_filter), @json($priority), "@lang('All Priorities')");
                 $("#syslog_clear").on("click", function () {
@@ -152,10 +131,6 @@
                 });
             });
         });
-<<<<<<< HEAD
->>>>>>> 7fd69710a (Syslog pages)
-=======
->>>>>>> 7fd69710a4e2b1683822b02661311ebe070d7790
     </script>
 @endpush
 
