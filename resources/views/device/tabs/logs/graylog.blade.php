@@ -10,13 +10,12 @@
                     data-url="{{ route('table.graylog') }}" data-export="false">
                     <thead>
                     <tr>
-                        <th data-column-id="severity" data-sortable="false"></th>
-                        <th data-column-id="origin">Origin</th>
-                        <th data-column-id="timestamp" data-formatter="browserTime">Timestamp</th>
-                        <th data-column-id="level">Level</th>
-                        <th data-column-id="source">Source</th>
-                        <th data-column-id="message" data-sortable="false">Message</th>
-                        <th data-column-id="facility">Facility</th>
+                        <th data-column-id="severity" data-width="20" data-sortable="false"></th>
+                        <th data-column-id="timestamp" data-width="160" data-order="desc">@lang('Timestamp')</th>
+                        <th data-column-id="source">@lang('Source')</th>
+                        <th data-column-id="level">@lang('Level')</th>
+                        <th data-column-id="message" data-sortable="false">@lang('Message')</th>
+                        <th data-column-id="facility">@lang('Facility')</th>
                     </tr>
                     </thead>
                 </table>
@@ -35,18 +34,19 @@
                     header: '<div id="@{{ctx.id}}" class="@{{css.header}} tw:flex tw:flex-wrap tw:items-center">' +
                         '<form class="tw:flex tw:flex-wrap tw:items-center" role="form" id="graylog_filter">' +
                             '<div class="tw:flex tw:items-baseline tw:ml-2">' +
-                                '<select name="stream" id="stream" class="form-control"></select>' +
+                                '<select name="graylog-streams" id="graylog-streams" class="form-control"></select>' +
                             '</div>' +
                             '<div class="tw:flex tw:items-baseline tw:ml-2">' +
-                                '<select name="loglevel" id="loglevel" class="form-control">' +
-                                    '<option value="" disabled selected>All LogLevels</option>' +
+                                '<select name="loglevel" id="loglevel" class="form-control" ' +
+                                    'data-toggle="tooltip" data-placement="top" ' +
+                                    'title="@lang("Maximum severity (7) Debug shows all")">' +
                                     '<option value="0">(0) {{ __("syslog.severity.0") }}</option>' +
                                     '<option value="1">(1) {{ __("syslog.severity.1") }}</option>' +
                                     '<option value="2">(2) {{ __("syslog.severity.2") }}</option>' +
                                     '<option value="3">(3) {{ __("syslog.severity.3") }}</option>' +
                                     '<option value="4">(4) {{ __("syslog.severity.4") }}</option>' +
                                     '<option value="5">(5) {{ __("syslog.severity.5") }}</option>' +
-                                    '<option value="6">(6) {{ __("syslog.severity.6") }}</option>' +
+                                    '<option value="6" selected>(6) {{ __("syslog.severity.6") }}</option>' +
                                     '<option value="7">(7) {{ __("syslog.severity.7") }}</option>' +
                                 '</select>' +
                             '</div>' +
@@ -79,17 +79,24 @@
                 post: function () {
                     return {
                         device: {{ $device->device_id }},
-                        stream: $('#stream').val() || '',
+                        stream: $('#graylog-streams').val() || '',
+                        source: $('#graylog-source').val() || '',
                         range: $('#range').val() || '',
                         loglevel: $('#loglevel').val() || '',
                     };
                 },
             });
             $("#graylog").on("loaded.rs.jquery.bootgrid", function () {
-                init_select2("#stream", "graylog", @json($graylog_filter), @json($stream),'All Messages');
+                init_select2("#graylog-streams", "graylog-streams", @json($graylog_filter), @json($stream),'All Streams');
+                $('[data-toggle="tooltip"]').tooltip();
+                $("#graylog_filter").on("submit", function (e) {
+                    e.preventDefault();
+                    graylog_grid.bootgrid("reload", true);
+                });
+
                 $("#graylog_clear").on("click", function () {
-                    $("#stream").val(null).trigger("change");
-                    $("#loglevel").val(null).trigger("change");
+                    $("#graylog-streams").val(null).trigger("change");
+                    $("#loglevel").val('6').trigger("change");
                     $("#range").val('0').trigger("change");
 
                     $("#graylog").find(".search-field").val("");

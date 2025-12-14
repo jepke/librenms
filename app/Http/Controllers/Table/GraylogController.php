@@ -28,6 +28,7 @@ namespace App\Http\Controllers\Table;
 
 use App\ApiClients\GraylogApi;
 use App\Facades\LibrenmsConfig;
+use Carbon\Carbon;
 use App\Models\Device;
 use DateInterval;
 use DateTime;
@@ -110,7 +111,9 @@ class GraylogController extends SimpleTableController
             $graylogTime->add($timeInterval);
             $displayTime = $graylogTime->format('Y-m-d H:i:s');
         } else {
-            $displayTime = $message['message']['timestamp'];
+            $displayTime = Carbon::parse($message['message']['timestamp'])
+                ->setTimezone(session('preferences.timezone'))
+                ->format(LibrenmsConfig::get('dateformat.compact'));
         }
 
         $level = $message['message']['level'] ?? '';
