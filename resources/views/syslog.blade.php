@@ -13,8 +13,8 @@
                     data-url="{{ route('table.syslog') }}" data-export="false">
                     <thead>
                     <tr>
-                        <th data-column-id="label"></th>
-                        <th data-column-id="timestamp" data-order="desc">Timestamp</th>
+                        <th data-column-id="label" data-width="20" data-sortable="false"></th>
+                        <th data-column-id="timestamp" data-width="160" data-order="desc">Timestamp</th>
                         <th data-column-id="level">Level</th>
                         <th data-column-id="device_id" data-order="asc">@lang('Device')</th>
                         <th data-column-id="program">Program</th>
@@ -25,7 +25,7 @@
                 </table>
             </div>
         </x-panel>
-</div>
+    </div>
 @endsection
 
 @push('scripts')

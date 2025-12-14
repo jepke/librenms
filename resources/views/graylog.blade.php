@@ -1,10 +1,13 @@
 @extends('layouts.librenmsv1')
 
-@section('content')
-    <x-device.page :device="$device" subtitle="{{ __('Graylog') }}">
-        <x-device.log-tabs :device="$device" tab="graylog" />
+@section('title', __('Graylog'))
 
-        <x-panel title="{{ __('Graylog') }}">
+@section('content')
+    <div class="container-fluid">
+        <x-panel body-class="tw:p-0!">
+            <x-slot name="heading">
+                <h3 class="panel-title">@lang('Graylog')</h3>
+            </x-slot>
             <div class="table-responsive">
                 <table id="graylog" class="table table-hover table-condensed graylog"
                     data-url="{{ route('table.graylog') }}" data-export="false">
@@ -13,6 +16,7 @@
                         <th data-column-id="severity" data-width="20" data-sortable="false"></th>
                         <th data-column-id="timestamp" data-width="160" data-order="desc">@lang('Timestamp')</th>
                         <th data-column-id="level">@lang('Level')</th>
+                        <th data-column-id="origin">@lang('Origin')</th>
                         <th data-column-id="source">@lang('Source')</th>
                         <th data-column-id="message" data-sortable="false">@lang('Message')</th>
                         <th data-column-id="facility">@lang('Facility')</th>
@@ -21,7 +25,7 @@
                 </table>
             </div>
         </x-panel>
-    </x-device.page>
+    </div>
 @endsection
 
 @push('scripts')
@@ -33,6 +37,10 @@
                 templates: {
                     header: '<div id="@{{ctx.id}}" class="@{{css.header}} tw:flex tw:flex-wrap tw:items-center">' +
                         '<form class="tw:flex tw:flex-wrap tw:items-center" role="form" id="graylog_filter">' +
+                            '{!! addslashes(csrf_field()) !!}' +
+                            '<div class="tw:flex tw:items-baseline tw:ml-2">' +
+                                '<select name="device" id="device" class="form-control"></select>' +
+                            '</div>' +
                             '<div class="tw:flex tw:items-baseline tw:ml-2">' +
                                 '<select name="graylog-streams" id="graylog-streams" class="form-control"></select>' +
                             '</div>' +
@@ -78,7 +86,7 @@
                 },
                 post: function () {
                     return {
-                        device: {{ $device->device_id }},
+                        device: $('#device').val() || '',
                         stream: $('#graylog-streams').val() || '',
                         source: $('#graylog-source').val() || '',
                         range: $('#range').val() || '',
@@ -87,7 +95,8 @@
                 },
             });
             $("#graylog").on("loaded.rs.jquery.bootgrid", function () {
-                init_select2("#graylog-streams", "graylog-streams", @json($graylog_filter), @json($stream),'All Streams');
+                init_select2("#device", "device", {limit: 100}, @json($device) , "@lang('All Devices')");
+                init_select2("#graylog-streams", "graylog-streams", @json($graylog_filter), @json($filter['stream']),'All Streams');
                 $('[data-toggle="tooltip"]').tooltip();
                 $("#graylog_filter").on("submit", function (e) {
                     e.preventDefault();
@@ -95,6 +104,7 @@
                 });
 
                 $("#graylog_clear").on("click", function () {
+                    $("#device").val(null).trigger("change");
                     $("#graylog-streams").val(null).trigger("change");
                     $("#loglevel").val('6').trigger("change");
                     $("#range").val('0').trigger("change");

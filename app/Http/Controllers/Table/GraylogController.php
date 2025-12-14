@@ -72,7 +72,7 @@ class GraylogController extends SimpleTableController
         $loglevel = $request->get('loglevel') ?? LibrenmsConfig::get('graylog.loglevel');
 
         $query = $api->buildSimpleQuery($search, $device) .
-            ($loglevel !== null ? ' AND level: <=' . $loglevel : '');
+            ($loglevel !== null ? ' AND level:[0 TO ' . (int) $loglevel . ']' : '');
 
         $sort = null;
         foreach ($request->get('sort', []) as $field => $direction) {
