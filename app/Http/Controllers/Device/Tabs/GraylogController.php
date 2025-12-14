@@ -41,6 +41,10 @@ class GraylogController extends Controller
             'range' => 'nullable|int',
             'loglevel' => 'nullable|int',
         ]);
+        $graylog_filter = [
+            'field' => 'stream',
+            'device' => $device->device_id,
+        ];
 
         return view('device.tabs.logs.graylog', [
             'device' => $device,
@@ -50,6 +54,7 @@ class GraylogController extends Controller
             'stream' => $request->input('stream', ''),
             'range' => $request->input('range', '0'),
             'loglevel' => $request->input('loglevel', ''),
+            'graylog_filter' => $graylog_filter,
         ]);
     }
 }

@@ -27,7 +27,7 @@
 @push('scripts')
     <script>
         $(function () {
-            var syslog_grid = $("#syslog").bootgrid({
+            const syslog_grid = $("#syslog").bootgrid({
                 ajax: true,
                 rowCount: [20, 50, 100, 250, -1],
                 templates: {
