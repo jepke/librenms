@@ -14,12 +14,12 @@
                     <thead>
                     <tr>
                         <th data-column-id="label" data-width="20" data-sortable="false"></th>
-                        <th data-column-id="timestamp" data-width="160" data-order="desc">Timestamp</th>
-                        <th data-column-id="level">Level</th>
+                        <th data-column-id="timestamp" data-width="160" data-order="desc">@lang('Timestamp')</th>
+                        <th data-column-id="level">@lang('Level')</th>
                         <th data-column-id="device_id" data-order="asc">@lang('Device')</th>
-                        <th data-column-id="program">Program</th>
-                        <th data-column-id="msg">Message</th>
-                        <th data-column-id="priority">Priority</th>
+                        <th data-column-id="program">@lang('Program')</th>
+                        <th data-column-id="msg" data-sortable="false">@lang('Message')</th>
+                        <th data-column-id="priority">@lang('Priority')</th>
                     </tr>
                     </thead>
                 </table>
@@ -33,7 +33,7 @@
         $(function () {
             const syslog_grid = $("#syslog").bootgrid({
                 ajax: true,
-                rowCount: [25, 50, 100, 250, -1],
+                rowCount: [25, 50, 100, 250],
                 templates: {
                     header: '<div id="@{{ctx.id}}" class="@{{css.header}} tw:flex tw:flex-wrap tw:items-center">' +
                         '<form class="tw:flex tw:flex-wrap tw:items-center" role="form" id="syslog_filter">' +

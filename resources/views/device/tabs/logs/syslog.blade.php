@@ -29,7 +29,7 @@
         $(function () {
             const syslog_grid = $("#syslog").bootgrid({
                 ajax: true,
-                rowCount: [20, 50, 100, 250, -1],
+                rowCount: [20, 50, 100, 250],
                 templates: {
                     header: '<div id="@{{ctx.id}}" class="@{{css.header}} tw:flex tw:flex-wrap tw:items-center">' +
                         '<form class="tw:flex tw:flex-wrap tw:items-center" role="form" id="syslog_filter">' +

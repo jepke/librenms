@@ -15,6 +15,7 @@ class GraylogController extends Controller
     {
         $request->validate([
             'stream' => 'nullable|string',
+            'device' => 'nullable|int',
             'range' => 'nullable|int',
             'loglevel' => 'nullable|int',
         ]);
@@ -23,10 +24,7 @@ class GraylogController extends Controller
             ->select(['device_id', 'hostname', 'ip', 'sysName', 'display'])
             ->firstWhere('device_id', $request->input('device'));
 
-        $graylog_filter = [
-            'field' => 'stream',
-        ];
-
+        $graylog_filter = ['field' => 'stream',];
         $device_selected = '';
         if ($device) {
             $device_selected = ['id' => $device->device_id, 'text' => $device->displayName()];
