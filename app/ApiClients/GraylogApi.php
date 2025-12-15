@@ -104,8 +104,8 @@ class GraylogApi
      */
     public function queryAbsolute(
         string $query = '*',
-        string $from,
-        string $to,
+        string $from = '',
+        string $to = '',
         int $limit = 0,
         int $offset = 0,
         ?string $sort = null,
