@@ -10,7 +10,7 @@
             </x-slot>
             <div class="table-responsive">
                 <table id="eventlog" class="table table-hover table-condensed table-striped"
-                    data-url="{{ route('table.eventlog') }}" data-export="false">
+                    data-url="{{ route('table.eventlog') }}">
                     <thead>
                     <tr>
                         <th data-column-id="label" data-width="20" data-sortable="false"></th>

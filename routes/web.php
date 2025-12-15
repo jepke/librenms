@@ -296,6 +296,7 @@ Route::middleware(['auth'])->group(function (): void {
             Route::get('device/export', [Table\DeviceController::class, 'export']);
             Route::post('edit-ports', Table\EditPortsController::class);
             Route::post('eventlog', Table\EventlogController::class)->name('table.eventlog');
+            Route::get('eventlog/export', [Table\EventlogController::class, 'export']);
             Route::post('fdb-tables', Table\FdbTablesController::class);
             Route::post('graylog', Table\GraylogController::class)->name('table.graylog');
             Route::post('inventory', Table\InventoryController::class)->name('table.inventory');
@@ -318,6 +319,7 @@ Route::middleware(['auth'])->group(function (): void {
             Route::post('storages', Table\StoragesController::class)->name('table.storages');
             Route::get('storages/export', [Table\StoragesController::class, 'export']);
             Route::post('syslog', Table\SyslogController::class)->name('table.syslog');
+            Route::get('syslog/export', [Table\SyslogController::class, 'export']);
             Route::post('printer-supply', Table\PrinterSupplyController::class)->name('table.printer-supply');
             Route::post('tnmsne', Table\TnmsneController::class)->name('table.tnmsne');
             Route::post('wireless', Table\WirelessSensorController::class)->name('table.wireless');

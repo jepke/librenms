@@ -150,4 +150,36 @@ class EventlogController extends TableController
             default => 'label-default', // Unknown
         };
     }
+
+    /**
+     * Get headers for CSV export
+     *
+     * @return array
+     */
+    protected function getExportHeaders()
+    {
+        return [
+            'Timestamp',
+            'Device',
+            'Type',
+            'Message',
+            'User',
+        ];
+    }
+    /**
+     * Format a row for CSV export
+     *
+     * @param  EventLog  $eventlog
+     * @return array
+     */
+    protected function formatExportRow($eventlog)
+    {
+        return [
+            Carbon::createFromTimestamp($eventlog->datetime)->toISOString(),
+            $eventlog->device ? $eventlog->device->displayName() : '',
+            $eventlog->type,
+            (string) $eventlog->message,
+            $eventlog->username ?: 'System',
+        ];
+    }
 }

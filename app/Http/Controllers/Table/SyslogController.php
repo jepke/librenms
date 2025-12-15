@@ -140,6 +140,30 @@ class SyslogController extends TableController
             default => '',
         };
     }
-
-    // end syslog_priority
+    protected function getExportHeaders()
+    {
+        return [
+            'Timestamp',
+            'Level',
+            'Device',
+            'Program',
+            'Message',
+        ];
+    }
+    /**
+     * Format a row for CSV export
+     *
+     * @param  Syslog  $syslog
+     * @return array
+     */
+    protected function formatExportRow($syslog)
+    {
+        return [
+            Carbon::createFromTimestamp($syslog->timestamp)->toISOString(),
+            $syslog->priority,
+            $syslog->device ? $syslog->device->displayName() : '',
+            (string) $syslog->program,
+            (string) $syslog->msg,
+        ];
+    }
 }
