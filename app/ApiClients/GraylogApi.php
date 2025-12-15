@@ -68,8 +68,14 @@ class GraylogApi
     /**
      * Query the Graylog server relative time
      */
-    public function queryRelative(string $query = '*', int $range = 0, int $limit = 0, int $offset = 0, ?string $sort = null, ?string $filter = null): array
-    {
+    public function queryRelative(
+        string $query = '*',
+        int $range = 0,
+        int $limit = 0,
+        int $offset = 0,
+        ?string $sort = null,
+        ?string $filter = null
+    ): array {
         if (! $this->isConfigured()) {
             return [];
         }
