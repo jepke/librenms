@@ -33,6 +33,7 @@
                 templates: {
                     header: '<div id="@{{ctx.id}}" class="@{{css.header}} tw:flex tw:flex-wrap tw:items-center">' +
                         '<form class="tw:flex tw:flex-wrap tw:items-center" role="form" id="graylog_filter">' +
+                            '{!! addslashes(csrf_field()) !!}' +
                             '<div class="tw:flex tw:items-baseline tw:ml-2">' +
                                 '<select name="graylog-streams" id="graylog-streams" class="form-control"></select>' +
                             '</div>' +
@@ -51,7 +52,9 @@
                                 '</select>' +
                             '</div>' +
                             '<div class="tw:flex tw:items-baseline tw:ml-2">' +
-                                '<select id="range" name="range" class="form-control">' +
+                                '<select id="range" name="range" class="form-control" ' +
+                                    'data-toggle="tooltip" data-placement="top" ' +
+                                    'title="@lang("Relative time range overrides the absolute range. Absolute “Start/End” is only used when the relative range is set to All")">' +
                                     '<option value="0">All Time Ranges</option>' +
                                     '<option value="300">Last 5 minutes</option>' +
                                     '<option value="900">Last 15 minutes</option>' +
@@ -66,6 +69,16 @@
                                     '<option value="1209600">Last 14 days</option>' +
                                     '<option value="2592000">Last 30 days</option>' +
                                 '</select>' +
+                            '</div>' +
+                            '<div class="tw:flex tw:relative tw:items-baseline tw:ml-2">' +
+                                '<input name="from" type="text" class="form-control" id="dtpickerfrom" maxlength="16" value="' + @json($from) + '" placeholder="From" data-date-format="YYYY-MM-DD HH:mm" ' +
+                                    'data-toggle="tooltip" data-placement="top" ' +
+                                    'title="@lang("Start of the absolute time range (ignored when a relative range is selected)")">' +
+                            '</div>' +
+                            '<div class="tw:flex tw:relative tw:items-baseline tw:ml-2">' +
+                                '<input name="to" type="text" class="form-control" id="dtpickerto" maxlength="16" value="' + @json($to) + '" placeholder="To" data-date-format="YYYY-MM-DD HH:mm" ' +
+                                    'data-toggle="tooltip" data-placement="top" ' +
+                                    'title="@lang("End of the absolute time range (ignored when a relative range is selected)")">' +
                             '</div>' +
                             '<button type="submit" class="btn btn-default tw:ml-2">@lang("Filter")</button>' +
                             '<button type="button" class="btn btn-default tw:ml-2" id="graylog_clear">@lang("Clear")</button>' +
@@ -83,17 +96,50 @@
                         source: $('#graylog-source').val() || '',
                         range: $('#range').val() || '',
                         loglevel: $('#loglevel').val() || '',
+                        from: $('#dtpickerfrom').val() || '',
+                        to: $('#dtpickerto').val() || '',
                     };
                 },
             });
+
+            const dtIcons = {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash-o',
+                close: 'fa fa-close'
+            };
             $("#graylog").on("loaded.rs.jquery.bootgrid", function () {
-                init_select2("#graylog-streams", "graylog-streams", @json($graylog_filter), @json($stream),'All Streams');
-                $('[data-toggle="tooltip"]').tooltip();
+                $("#dtpickerfrom").datetimepicker({
+                    icons: dtIcons,
+                    defaultDate: '{{ $default_date }}'
+                });
+                $("#dtpickerfrom").on("dp.change", function (e) {
+                    $("#dtpickerto").data("DateTimePicker").minDate(e.date);
+                });
+                $("#dtpickerto").datetimepicker({
+                    icons: dtIcons,
+                });
+                $("#dtpickerto").on("dp.change", function (e) {
+                    $("#dtpickerfrom").data("DateTimePicker").maxDate(e.date);
+                });
+                if ($("#dtpickerfrom").val() !== '') {
+                    $("#dtpickerto").data("DateTimePicker").minDate($("#dtpickerfrom").val());
+                }
+                if ($("#dtpickerto").val() !== '') {
+                    $("#dtpickerfrom").data("DateTimePicker").maxDate($("#dtpickerto").val());
+                } else {
+                    $("#dtpickerto").data("DateTimePicker").maxDate('{{ $now }}');
+                }
                 $("#graylog_filter").on("submit", function (e) {
                     e.preventDefault();
                     graylog_grid.bootgrid("reload", true);
                 });
-
+                init_select2("#graylog-streams", "graylog-streams", @json($graylog_filter), @json($stream),'All Streams');
                 $("#graylog_clear").on("click", function () {
                     $("#graylog-streams").val(null).trigger("change");
                     $("#loglevel").val('6').trigger("change");
@@ -101,8 +147,24 @@
 
                     $("#graylog").find(".search-field").val("");
                     graylog_grid.bootgrid("search", "");
+
+                    const fromPicker = $("#dtpickerfrom").data("DateTimePicker");
+                    const toPicker   = $("#dtpickerto").data("DateTimePicker");
+
+                    const now   = moment();
+                    const from  = moment(now).subtract(1, 'day');
+
+                    fromPicker.minDate(false);
+                    fromPicker.maxDate(now);
+                    toPicker.minDate(from);
+                    toPicker.maxDate(now);
+
+                    fromPicker.date(from);
+                    toPicker.date(now);
+
                     graylog_grid.bootgrid("reload", true);
                 });
+                $('[data-toggle="tooltip"]').tooltip();
             });
         });
     </script>

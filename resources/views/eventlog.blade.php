@@ -17,7 +17,7 @@
                         <th data-column-id="datetime" data-width="160" data-order="desc">@lang('Timestamp')</th>
                         <th data-column-id="device_id" data-order="asc">@lang('Device')</th>
                         <th data-column-id="type">@lang('Type')</th>
-                        <th data-column-id="message">@lang('Message')</th>
+                        <th data-column-id="message" data-sortable="false">@lang('Message')</th>
                         <th data-column-id="username">@lang('User')</th>
                     </tr>
                     </thead>

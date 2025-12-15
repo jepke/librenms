@@ -18,6 +18,8 @@ class GraylogController extends Controller
             'device' => 'nullable|int',
             'range' => 'nullable|int',
             'loglevel' => 'nullable|int',
+            'to' => 'nullable|string',
+            'level' => 'nullable|string',
         ]);
 
         $device = \App\Models\Device::hasAccess($request->user())
@@ -51,6 +53,10 @@ class GraylogController extends Controller
                 'stream' => $request->input('stream', ''),
                 'range' => $request->input('range', '0'),
                 'loglevel' => $request->input('loglevel', ''),
+                'from' => $fromInput,
+                'to' => $toInput,
+                'default_date' => $defaultFrom->format($format),
+                'now' => $now->format($format),
             ],
             'graylog_filter' => $graylog_filter,
         ]);
